@@ -75,7 +75,7 @@ class Douyin:
                     # handle the album
                     image = []
                     for i in data['item_list'][0]['images']:
-                        image.append(i['url_list'][0])
+                        image.append(i['download_url_list'][0])
                         
                     hashtag = []
                     for j in data['item_list'][0]['text_extra']:
