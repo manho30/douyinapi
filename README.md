@@ -135,7 +135,7 @@ $ git clone https://github.com/manho30/douyinapi.git
 $ cd douyinapi
 ```
 
-2. 安装依赖
+2. 安装依赖库
 ```bash
 $ pip install -r requirements.txt
 ```
