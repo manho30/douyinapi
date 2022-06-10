@@ -62,10 +62,10 @@ def api():
         })
         
 if __name__ == '__main__':
-    # 开启WebAPI
+    # start api live
     if os.environ.get('PORT'):
         port = int(os.environ.get('PORT'))
     else:
-        # 默认端口
+        # using port number by config.ini
         port = config['port']
     app.run(host='0.0.0.0', port=port)
