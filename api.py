@@ -1,12 +1,16 @@
-from flask import Flask, request, jsonify, make_response
-from helper import findUrl
-import configparser
-from scraper import Douyin
 import os
+
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import configparser
+
+from helper import findUrl
+from scraper import Douyin
 
 douyin = Douyin()
 
 app = Flask(__name__)
+CORS(app)
 
 config = configparser.ConfigParser()
 config.read('config.ini', encoding='utf-8')
@@ -25,7 +29,9 @@ def index():
             'msg': 'ads free, open source and free to use.'
         }
     }
-    return jsonify(index_info)
+    res = jsonify(index_info)
+    res.headers.add('Access-Control-Allow-Origin', '*')
+    return res
     
 @app.route("/api", methods=["POST", "GET"])
 def api():
@@ -35,31 +41,41 @@ def api():
             vid_url = findUrl.find_url(url)[0]
             if url:
                 try:
-                    return jsonify(douyin.douyin(vid_url))
+                    res = jsonify(douyin.douyin(vid_url))
+                    res.headers.add('Access-Control-Allow-Origin', '*')
+                    return res
                 except Exception as e:
-                    return jsonify({
+                    res = jsonify({
                         'ok': False,
                         'status': '500',
                         'message': f'Internal server error. {e}'
                     })
+                    res.headers.add('Access-Control-Allow-Origin', '*')
+                    return res
             else:
-                return jsonify({
+                res = jsonify({
                     'ok': False,
                     'status': '400',
                     'message': 'url is not valid.'
                 })
+                res.headers.add('Access-Control-Allow-Origin', '*')
+                return res
         else:
-            return jsonify({
+            res = jsonify({
                 'ok': False,
                 'status': '400',
                 'message': 'url is required.'
             })
+            res.headers.add('Access-Control-Allow-Origin', '*')
+            return res
     else:
-        return jsonify({
+        res = jsonify({
             'ok': False,
             'status': '403',
             'message': 'api is disabled.'
         })
+        res.headers.add('Access-Control-Allow-Origin', '*')
+        return res
         
 if __name__ == '__main__':
     # 开启WebAPI
