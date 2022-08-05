@@ -3,6 +3,8 @@ import os
 from flask import Flask, request, jsonify
 import configparser
 
+from requests import Response
+
 from helper import findUrl
 from scraper import Douyin
 
@@ -30,6 +32,32 @@ def index():
     res = jsonify(index_info)
     res.headers.add('Access-Control-Allow-Origin', '*')
     return res
+    
+@app.route("/api/v2", methods=["POST", "GET"])
+def video():
+    url = request.args.get('url')
+    if url is None:
+        return jsonify({'ok': False, 'status': '400', 'message': 'url is required'})
+    url_vid= findUrl.find_url(url)[0]
+    if url_vid is None:
+        return jsonify({'ok': False, 'status': '400', 'message': 'url is invalid'})
+    
+    return '''
+    <html>
+        <head>
+            <title>Redirect</title>
+            <meta charset="utf-8">
+        </head>
+        <body>
+            <h1>Redirecting you...</h1>
+            <script>
+                const redirect = () =>  window.location.href = "{}";
+                setTimeout(redirect, 1000);
+            </script>
+        </body>
+    </html>
+    '''.format(douyin.get_video(url_vid))
+        
     
 @app.route("/api", methods=["POST", "GET"])
 def api():

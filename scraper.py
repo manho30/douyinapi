@@ -16,6 +16,7 @@ class Douyin:
         self.headers = {
             'user-agent': 'Mozilla/5.0 (Linux; Android 8.0; Pixel 2 Build/OPD3.170816.012) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36 Edg/87.0.664.66'
         }
+        
     
     def douyin(self, url):
         '''
@@ -192,9 +193,19 @@ class Douyin:
                 'status': '500',
                 'message': f'Internal server error. {e}'
             }
-            
+    def get_video(self, url):
+        try:
+            r = self.douyin(url)
+            if r['ok']:
+                return r['result']['video']['video_url']['free_watermark_1080p']
+        except Exception as e:
+            return {
+                'ok': False,
+                'status': '500',
+                'message': f'Internal server error. {e}'
+            }
 # for debug only!
 
 if __name__ == '__main__':
     douyin = Douyin()
-    print(douyin.douyin("https://v.douyin.com/FEUgdxn/ "))
+    print(douyin.get_video("https://v.douyin.com/FEUgdxn/ "))
