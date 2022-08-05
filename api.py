@@ -1,7 +1,6 @@
 import os
 
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 import configparser
 
 from helper import findUrl
@@ -10,7 +9,6 @@ from scraper import Douyin
 douyin = Douyin()
 
 app = Flask(__name__)
-CORS(app)
 
 config = configparser.ConfigParser()
 config.read('config.ini', encoding='utf-8')
@@ -78,10 +76,10 @@ def api():
         return res
         
 if __name__ == '__main__':
-    # start api live
+    # 开启WebAPI
     if os.environ.get('PORT'):
         port = int(os.environ.get('PORT'))
     else:
-        # using port number by config.ini
+        # 默认端口
         port = config['port']
     app.run(host='0.0.0.0', port=port)
