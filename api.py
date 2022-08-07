@@ -1,4 +1,5 @@
 import os
+import re
 
 from flask import Flask, request, jsonify
 import configparser
@@ -35,11 +36,11 @@ def index():
     
 @app.route("/api/v2", methods=["POST", "GET"])
 def video():
-    url = request.args.get('url')
-    if url is None:
+    try:
+        url = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', request.args.get('url'))
+    except Exception as e:
         return jsonify({'ok': False, 'status': '400', 'message': 'url is required'})
-    url_vid= findUrl.find_url(url)[0]
-    if url_vid is None:
+    if url is None:
         return jsonify({'ok': False, 'status': '400', 'message': 'url is invalid'})
     
     return '''
@@ -56,7 +57,7 @@ def video():
             </script>
         </body>
     </html>
-    '''.format(douyin.get_video(url_vid))
+    '''.format(douyin.get_video(url[0]))
         
     
 @app.route("/api", methods=["POST", "GET"])
